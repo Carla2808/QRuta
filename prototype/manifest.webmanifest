@@ -1,0 +1,10 @@
+{
+  "name": "QRuta — Identificación y emergencia del transporte público",
+  "short_name": "QRuta",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#14306B",
+  "theme_color": "#14306B",
+  "lang": "es-BO",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

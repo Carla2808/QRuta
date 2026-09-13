@@ -1,0 +1,67 @@
+<title>QRuta</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+<link rel="stylesheet" href="css/app.css">
+
+<header class="topbar">
+  <div class="brand"><span class="mark">Q</span>QRuta <small>Seguridad digital del transporte público · Santa Cruz de la Sierra</small></div>
+  <div class="view-tabs" role="tablist">
+    <button role="tab" data-view="phone" aria-selected="true">Web de emergencia</button>
+    <button role="tab" data-view="dashboard" aria-selected="false">Panel del operador</button>
+  </div>
+  <span class="demo-badge">Prototipo · datos ficticios</span>
+</header>
+
+<main class="stage" id="stage">
+  <aside class="side" aria-label="Controles de la demostración">
+    <div>
+      <h3>Quién escanea</h3>
+      <div class="seg" role="group">
+        <button data-role="public" aria-pressed="true">Cualquier persona<small>sin cuenta</small></button>
+        <button data-role="contact" aria-pressed="false">Contacto autorizado<small>OTP</small></button>
+        <button data-role="responder" aria-pressed="false">Servicio de emergencia<small>credencial</small></button>
+      </div>
+      <p class="hint">Cambia qué información se desbloquea. En la vida real el nivel se obtiene desde la misma página (código por SMS o credencial), no con este selector.</p>
+    </div>
+    <div>
+      <h3>Red del teléfono</h3>
+      <div class="seg" role="group">
+        <button data-net="fast" aria-pressed="true">Rápida<small>4G</small></button>
+        <button data-net="slow" aria-pressed="false">Lenta<small>3G</small></button>
+        <button data-net="weak" aria-pressed="false">Señal débil<small>timeouts</small></button>
+        <button data-net="offline" aria-pressed="false">Sin conexión<small>fallback</small></button>
+      </div>
+      <p class="hint">Cada llamada al backend simulado respeta la latencia y la tasa de fallo del modo elegido.</p>
+    </div>
+    <div>
+      <h3>Qué es real aquí</h3>
+      <p class="hint">✔ El QR de la placa (escanealo con tu teléfono) · ✔ Geolocalización del navegador · ✔ Copiar / compartir / vibración<br>✖ Backend, SMS, llamadas y personas: simulados y marcados como DEMO.</p>
+    </div>
+    <button class="btn-reset" id="reset">Reiniciar demo</button>
+  </aside>
+
+  <section class="phone-stage">
+    <div class="phone" id="phone">
+      <div class="screen" id="screen">
+        <div class="statusbar" id="statusbar" aria-hidden="true"></div>
+        <div class="netbanner" id="netbanner" role="status"></div>
+        <div class="viewport" id="viewport"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="console-wrap" aria-label="Consola del sistema">
+    <h3>Pipeline del sistema <span>QR → token → backend → protocolo</span></h3>
+    <div class="console" id="console" aria-live="polite"></div>
+  </aside>
+</main>
+
+<section class="dash" id="dash" hidden aria-label="Panel del operador"></section>
+
+<script src="vendor/three-0.128.0/three.min.js"></script>
+<script src="vendor/qrcode-generator-1.4.4.js"></script>
+<script src="js/data.js"></script>
+<script src="js/qr.js"></script>
+<script src="js/map.js"></script>
+<script src="js/bus3d.js"></script>
+<script src="js/app.js"></script>

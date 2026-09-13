@@ -1,0 +1,46 @@
+# 8 · Investigación: qué existe ya y contexto de Santa Cruz
+
+Regla del proyecto: **no afirmar que "esto nunca se hizo"**. Lo que sigue es lo que encontramos
+(búsqueda web, septiembre 2026) y cómo condiciona el diseño. Las cifras deben revalidarse con
+las fuentes primarias (GAMSCZ, Tránsito, sindicatos) antes del piloto.
+
+## 8.1 Soluciones existentes relacionadas
+
+| Categoría | Ejemplos | Qué hacen | Qué tomamos / qué hacemos distinto |
+|---|---|---|---|
+| **QR en taxis/autos para seguridad del pasajero** | Delhi (Himmat Plus, 2019: ~3 000 taxis/autos con tarjeta QR en el respaldo; requiere app; envía viaje al PHQ) — [Business Standard](https://www.business-standard.com/article/pti-stories/lieutenant-governor-launches-qr-code-scheme-on-himmat-plus-app-for-women-safety-and-security-119082301412_1.html), [Autocar India](https://www.autocarindia.com/car-news/delhi-based-autos-cabs-to-have-mandatory-qr-code-408361); Mumbai (QR con datos del chofer, permiso, botón policía) y Bengaluru (tarjetas QR ligadas a la app Astram) — [Deccan Herald](https://www.deccanherald.com/india/karnataka/bengaluru/bengaluru-traffic-police-to-launch-verification-stickers-to-curb-unauthorised-autorickshaws-3865050); Peshawar (stickers QR obligatorios para taxis, multas) — [PakWheels](https://www.pakwheels.com/blog/peshawar-taxi-qr-code-registration-safety-initiative/); Gedling (UK) licencias de taxi con QR — [Gedling](https://www.gedling.gov.uk/resident/latestnews/articles/archives/2020/council-to-introduce-new-qr-coded-taxi-driver-licences-to-increase-safety-for-passengers.php). | Verifican al chofer **antes/durante el viaje**; la mayoría exige app o registro; orientados a acoso y vehículos ilegales. | Validamos que la **placa QR con identidad vehículo↔conductor funciona a escala municipal**. Distinto: sin app, foco en el accidente, protocolo de emergencia, incidente con ID, niveles de privacidad, conductor por turno. |
+| **QR médico / ICE** | Sticker4life (motociclistas, España), LifeQR, QRescueID (cascos, QR+NFC), QuickID, Vida QR — [Sticker4life](https://sticker4life.com/), [LifeQR](https://globallifeqr.com/), [QRescueID](https://qrescueid.app/), [QuickID](https://quickid.app/). | Identifican a la **víctima**: sangre, alergias, contactos; lectura sin app. | Adoptamos el patrón "sin app + perfil voluntario", pero con **niveles de acceso** (la mayoría de estos exponen todo a quien escanea). |
+| **QR de rescate en vehículos** | Mercedes-Benz (2013–2015, patente liberada) y GM: QR en la tapa del tanque y pilar B con planos de extracción para bomberos — [Big Think](https://bigthink.com/technology-innovation/in-the-event-of-a-crash-scan-this-qr-code/), [Center for Auto Safety](https://www.autosafety.org/vehicle-schematics-first-responders-electronic-qr-codes/), [Moditech](https://www.moditech.com/news/vehicle-selection-using-qr-codes/). | Información técnica del vehículo para rescatistas. | Ubicación estándar (junto a puertas) y la idea de que **los rescatistas ya escanean**. MVP 3: ficha técnica del micro (combustible GNV, ubicación del cilindro, batería). |
+| **Transporte en Santa Cruz** | Líneas 72 y 73 con cámaras y **pago por QR** (abr-2025) — [El Deber](https://www.eldeber.com.bo/santa-cruz/dos-lineas-de-micros-ya-cuentan-con-camaras-y-pago-por-qr_510044/), [La Patria](https://lapatria.bo/enfoque-nacional/modernizacion-dos-lineas-de-transporte-en-santa-cruz-incorporan-camaras-de-vigilancia-y-pago-digital/); apps de rutas Cruzero y Microcruz — [Microcruz](https://microcruz.tel.bo/), [Cruzero](https://play.google.com/store/apps/details?id=com.mos&hl=en_US); Moovit cubre 129 rutas y 6 824 paradas — [Moovit](https://moovitapp.com/index/en/public_transit-lines-Santa_Cruz_de_la_Sierra-4977-1048663). | Pago, rutas, cámaras. **Nadie identifica al vehículo/conductor en una emergencia.** | El QR de pago demuestra que **los operadores aceptan QR en las unidades**; QRuta puede convivir (placas distintas, funciones distintas) o integrarse en MVP 3. Las rutas de Microcruz/Moovit/OSM sirven para los corredores. |
+| **Sistemas de incidentes / respuesta a emergencias** | Plataformas 911/CAD; apps de pánico municipales en LatAm; en Bolivia el 110 (Policía), 118 (ambulancia), 119 (Bomberos) — [ABAVYT](https://abavyt.org.bo/numeros-de-emergencia/), [Saropa](https://saropa.com/es/emergency-bo/). | Despacho centralizado. | QRuta **no reemplaza** al despacho: le entrega una ficha estructurada y un ID. Los números se cargan por ciudad y se validan con la autoridad (hay inconsistencias entre fuentes, p. ej. 165/160). |
+
+## 8.2 Contexto de Santa Cruz de la Sierra
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Líneas de micros | 126 (solo 9 con licencia vigente; última autorización 2009) | [El Deber](https://eldeber.com.bo/santa-cruz/de-las-126-lineas-de-micros-que-circulan-en-la-ciudad-solo-nueve-tienen-licencia/) |
+| Micros en circulación | >10 000; 5 448 con registro municipal | Ídem |
+| Rutas / paradas (datos abiertos) | 129 rutas, 6 824 paradas | [Moovit](https://moovitapp.com/index/en/public_transit-lines-Santa_Cruz_de_la_Sierra-4977-1048663) |
+| Reordenamiento del centro | 68 líneas autorizadas a entrar al centro (nov-2025), 720 micros/hora por 8 canales | [El Deber](https://eldeber.com.bo/santa-cruz/reordenamiento-del-transporte-sepa-cuales-son-las-68-lineas-de-micros-que-pasan-por-el-centro-de-la-ciudad_500997/), [Red Uno](https://www.reduno.com.bo/noticias/conozca-las-lineas-de-micros-que-si-ingresaran-al-centro-cruceno--202511015649) |
+| Registro municipal de conductores (2024) | Obligatorio; CI, licencia, antecedentes, Bs 60; +7 000 vehículos registrados; primero en 15 años; el sector se declaró en emergencia | [Unitel](https://unitel.bo/noticias/sociedad/alcaldia-de-santa-cruz-de-la-sierra-registra-a-conductores-de-servicio-publico-y-el-sector-se-declara-en-emergencia-DL13817400), [El Día](https://www.eldia.com.bo/2024-10-30/santa-cruz/critican-nuevo-registro-de-la-alcaldia-para-el-transporte-publico-a-bs-60-ven-afan-recaudador.html) |
+| Organización | Sindicatos (Santa Cruz, Andrés Ibáñez, 21 de Mayo, 24 de Septiembre…), cada uno con líneas numeradas; conflictos recurrentes con la Alcaldía (paros dic-2025) | [Unitel](https://unitel.bo/noticias/economia/no-habra-micros-este-lunes-en-santa-cruz-de-la-sierra-transporte-urbano-y-alcaldia-aun-no-llegan-a-un-acuerdo-EI18679728) |
+| Siniestralidad | 170 fallecidos en 6 meses en el departamento; choques con micros con 16 y 5 heridos (ago-2024); conductor reincidente en atropello fatal (ene-2026) | [El Deber](https://eldeber.com.bo/santa-cruz/seis-meses-170-personas-fallecieron-accidentes-transito-santa-cruz_1782691993), [Red Uno](https://www.reduno.com.bo/noticias/video-camara-capto-el-choque-entre-vagoneta-y-micro-que-dejo-16-personas-internadas--202487132010), [Correo del Sur](https://correodelsur.com/seguridad/20260129/santa-cruz-revelan-que-micrero-que-embistio-y-mato-a-sebastian-vespa-es-reincidente.html) |
+| Percepción del servicio | Conducción imprudente, sin control, riesgo para pasajeros | [eju.tv](https://eju.tv/2023/07/santa-cruz-micreros-imprudentes-apurados-y-sin-control-ponen-en-riesgo-a-pasajeros/), [La Pública](https://lapublica.org.bo/al-toque/santa-cruz/item/534-guia-para-usar-los-micros-o-como-sobrevivir-en-el-transporte-cruceno) |
+| Conectividad | Tigo fuerte en el oriente; Entel mejor cobertura nacional; Viva urbano; 4G en la ciudad con huecos periurbanos | [DPL News](https://dplnews.com/bolivia-tigo-amplia-cobertura-4g-en-zonas-rurales-y-potencia-su-red-en-areas-urbanas-y-periurbanas/), [nPerf Tigo](https://www.nperf.com/en/map/BO/3904906.Santa-Cruz-de-la-Sierra/167640.Tigo-Mobile/signal), [nPerf Entel](https://www.nperf.com/en/map/BO/3904906.Santa-Cruz-de-la-Sierra/167642.Entel-Mobile/signal) |
+| Números de emergencia | 110 Policía · 118 Ambulancia · 119 Bomberos (otras fuentes citan 160/165 para ambulancia: **validar**) | [ABAVYT](https://abavyt.org.bo/numeros-de-emergencia/), [Infobae](https://www.infobae.com/telefonos-utiles/) |
+
+## 8.3 Lo que no encontramos (y hay que investigar en campo)
+
+- Estadística oficial de accidentes **por línea/unidad** (Tránsito/GAMSCZ): pedirla; es el KPI base del piloto.
+- Cuántos conductores por unidad y cómo se organizan los turnos en cada sindicato.
+- Penetración real de smartphones entre conductores de micro.
+- Si el registro municipal 2024 tiene API o al menos exportación: define si el operador carga datos a mano o se sincroniza.
+- Marco legal para que SEDES/Policía acepten un "código de incidente" como credencial de acceso.
+
+## 8.4 UX research propuesto antes del MVP
+
+1. **Sombra a 6 conductores** (2 sindicatos, turnos mañana/noche): jornada, teléfono, qué harían en un choque, qué datos temen exponer.
+2. **Entrevistas a 12 pasajeros frecuentes** (Plan 3000, Villa 1º de Mayo, centro): reconocimiento de líneas, confianza en QR, permisos que darían.
+3. **Entrevistas con Tránsito, SEDES y un hospital de tercer nivel**: qué información necesitan en el minuto 1 y en el minuto 30; cómo citan un incidente.
+4. **Prueba de placa en 3 micros durante 2 semanas** (sin backend): tasa de escaneo espontáneo, legibilidad al sol, vandalismo.
+5. **Test de usabilidad bajo estrés simulado** (ruido, tiempo, tarea secundaria) con el prototipo: tiempo hasta "Reportar", errores, comprensión de niveles de privacidad.
