@@ -1,10 +1,10 @@
-/* QRuta — prototipo funcional (DEMO).
+/* SALVO — prototipo funcional (DEMO).
  * Todo lo que toca red está SIMULADO en `api()`: registra en la consola lateral el mismo
  * pipeline que ejecutaría el backend real (QR → identificador → token → validación →
  * vehículo → conductor → información autorizada → protocolo). Lo que sí es real:
  * el QR (escaneable), la geolocalización del navegador, el portapapeles y la vibración. */
 (function () {
-  const D = window.QRUTA_DATA;
+  const D = window.SALVO_DATA;
   const $ = (s, el) => (el || document).querySelector(s);
   const pad = (n, l) => String(n).padStart(l || 2, '0');
   const now = () => new Date();
@@ -160,10 +160,10 @@
 
   // ------------------------------------------------------------ vistas: teléfono
   const V = {};
-  V.splash = () => `<div class="splash"><div><div class="logo">Q</div><h1>QRuta</h1><p>Identifica. Informa. Protege. Responde.</p></div></div>`;
+  V.splash = () => `<div class="splash"><div><div class="logo">S</div><h1>SALVO</h1><p>Identifica. Informa. Protege. Responde.</p></div></div>`;
 
   V.home = () => `<div class="s">
-    <div class="appbar"><h1>QRuta</h1><div class="spacer"></div><span class="pill info">${S.city ? S.city.name : 'Santa Cruz de la Sierra'}</span></div>
+    <div class="appbar"><h1>SALVO</h1><div class="spacer"></div><span class="pill info">${S.city ? S.city.name : 'Santa Cruz de la Sierra'}</span></div>
     <div class="hero-scan">
       <div class="eyebrow" style="color:rgba(255,255,255,.7)">Ante un accidente</div>
       <h2>Escaneá el QR del micro y sabé quién es, de qué línea y a quién avisar.</h2>
@@ -182,7 +182,7 @@
 
   V.scan = () => `<div class="scan" id="scanwrap">
     <div class="appbar" style="padding:8px 12px 0;color:#fff"><button class="back" data-action="back" style="background:rgba(255,255,255,.12);color:#fff">${ICON.back}</button><h1 style="font-size:16px">Cámara</h1><div class="spacer"></div><span class="pill" style="background:rgba(255,255,255,.14);color:#fff">DEMO</span></div>
-    <div class="cam" id="cam"><div class="plate-mini">${QRutaQR.plate(S.qr, { small: true })}</div><div class="reticle"><i></i><i></i><i></i><i></i></div><div class="laser"></div></div>
+    <div class="cam" id="cam"><div class="plate-mini">${SalvoQR.plate(S.qr, { small: true })}</div><div class="reticle"><i></i><i></i><i></i><i></i></div><div class="laser"></div></div>
     <div class="msg" id="scanmsg"><b>Apuntá al QR del vehículo</b><span>Lectura automática · sin app · sin cuenta</span></div>
   </div>`;
 
@@ -207,13 +207,13 @@
   function mapCard(loc, h) {
     const l = loc || S.vehicle.lastKnownLocation;
     const routePts = [[-17.826, -63.135], [-17.808, -63.152], [-17.7995, -63.161], [-17.79, -63.172], [-17.7833, -63.1821], [-17.775, -63.19]];
-    return `<div class="mapcard">${QRutaMap.render({ lat: l.lat, lng: l.lng, accuracyM: l.accuracyM || 12, height: h || 190, route: routePts, routeColor: S.route.color })}
+    return `<div class="mapcard">${SalvoMap.render({ lat: l.lat, lng: l.lng, accuracyM: l.accuracyM || 12, height: h || 190, route: routePts, routeColor: S.route.color })}
       <div class="foot"><div><b>${l.label}</b><br>${l.source === 'phone' ? 'GPS de tu teléfono' : 'Última posición reportada por el vehículo · hace ' + (l.ageSec || 38) + ' s'}</div><span class="pill info">${hhmm(now())}</span></div></div>`;
   }
 
   V.identified = () => `<div class="s">
     <div class="appbar"><button class="back" data-action="home">${ICON.back}</button><div class="spacer"></div><span class="pill lock">${ICON.lock} sesión 15 min</span></div>
-    <div class="idband"><div class="ck">${ICON.check}</div><div><b>VEHÍCULO IDENTIFICADO</b><span>Este vehículo está registrado en QRuta · ${S.city.name}</span></div></div>
+    <div class="idband"><div class="ck">${ICON.check}</div><div><b>VEHÍCULO IDENTIFICADO</b><span>Este vehículo está registrado en SALVO · ${S.city.name}</span></div></div>
     ${vehicleHero()}
     <div class="card kv">
       <span class="k">Línea</span><span class="v">${S.route.number} <span style="font-weight:600;color:var(--muted)">· ${S.operator.name}</span></span>
@@ -247,7 +247,7 @@
       <div class="card kv">
         <span class="k">Licencia</span><span class="v">Cat. ${d.licenseCategory} · vigente</span>
         <span class="k">Registro municipal</span><span class="v mono">${lvl === 'public' ? 'GAMSCZ-TT-•••••-7811' : d.municipalCertificate}</span>
-        <span class="k">En QRuta desde</span><span class="v">${d.registeredAt}</span>
+        <span class="k">En SALVO desde</span><span class="v">${d.registeredAt}</span>
         <span class="k">Operador</span><span class="v">${S.operator.name}</span>
         <span class="k">Teléfono</span><span class="v">${lvl === 'public' ? `<span class="pill lock">${ICON.lock} protegido</span>` : lvl === 'contact' ? 'vía la app' : '+591 7•• ••• 09'}</span>
       </div>
@@ -299,7 +299,7 @@
 
   V.contacts = () => `<div class="s">
     <div class="appbar"><button class="back" data-action="back">${ICON.back}</button><h1>Contacto de emergencia</h1></div>
-    <p class="lead">Podés pedir que QRuta avise a las personas que el conductor designó. No verás su número: el sistema los contacta por vos.</p>
+    <p class="lead">Podés pedir que SALVO avise a las personas que el conductor designó. No verás su número: el sistema los contacta por vos.</p>
     <div class="card">${S.driver.emergencyContacts.map(c => `<div class="contactline"><div class="avatar" style="width:36px;height:36px;font-size:13px">${c.name[0]}</div><div><b>${c.name}</b><br><span style="color:var(--muted)">${c.relation} · ${S.role === 'public' ? 'número protegido' : c.phoneMasked}</span></div><span class="st pill ${S.incident && S.incident.notified.length ? 'ok' : 'lock'}">${S.incident && S.incident.notified.length ? 'avisado' : 'no avisado'}</span></div>`).join('')}</div>
     <div class="actions"><button class="btn primary" data-action="notify-contacts">${ICON.user}<span class="txt">Avisar ahora<span class="sub">WhatsApp + SMS con vehículo, ubicación y hora</span></span></button></div>
     <p class="legalnote">El aviso incluye tu rol ("persona que escaneó el QR") pero no tu número, salvo que lo autorices al reportar.</p>
@@ -422,7 +422,7 @@
       <div class="appbar"><button class="back" data-action="back">${ICON.back}</button><h1>Placa QR física</h1></div>
       <div class="vehicle-hero" id="hero3d" style="height:200px"><span class="pill info tag">Tocá una ubicación</span></div>
       <div class="hotspots">${spots.map(s => `<button class="hotspot" data-action="plate-spot" data-spot="${s.id}" aria-pressed="${S.plateSpot === s.id}"><span class="n">${s.n}</span><div><b>${s.t}</b><span>${s.d}</span></div><span class="score">${s.score}</span></button>`).join('')}</div>
-      <div style="display:grid;place-items:center;padding:10px 0">${QRutaQR.plate('SCZ-Q7K3-M9V2', { version: 3, vehicle: { route: '123', unit: '045' } })}</div>
+      <div style="display:grid;place-items:center;padding:10px 0">${SalvoQR.plate('SCZ-Q7K3-M9V2', { version: 3, vehicle: { route: '123', unit: '045' } })}</div>
       <div class="card kv"><span class="k">Tamaño</span><span class="v">15 × 21 cm (exterior) · 10 × 14 cm (interior)</span><span class="k">Material</span><span class="v">Vinilo reflectivo + laminado UV</span><span class="k">Lectura</span><span class="v">≥ 2,5 m con cámara de gama media</span><span class="k">Corrección</span><span class="v">ECL H (30 % de daño)</span><span class="k">Reemplazo</span><span class="v">Nueva versión → la anterior se revoca</span></div>
       <p class="legalnote">El QR de arriba es real: escanealo con tu teléfono y abre esta demo directamente en "vehículo identificado". Azul institucional + franja roja: no parece publicidad.</p>
     </div>`;
@@ -460,7 +460,7 @@
     scr.innerHTML = (V[S.screen] || V.home)();
     scr.scrollTop = 0;
     const hero = $('#hero3d');
-    if (hero && window.QRutaBus3D) S.bus3d = QRutaBus3D.mount(hero, { lineColor: 0xF2A93B, highlight: S.screen === 'plate' ? S.plateSpot : 'door', showAll: S.screen === 'plate' });
+    if (hero && window.SalvoBus3D) S.bus3d = SalvoBus3D.mount(hero, { lineColor: 0xF2A93B, highlight: S.screen === 'plate' ? S.plateSpot : 'door', showAll: S.screen === 'plate' });
     if (S.screen === 'report' && S.form && S.form.step === 3 && !S.geo && !S.locating) { S.locating = true; locate().then(g => { S.geo = g; S.locating = false; if (S.screen === 'report') render(); }); }
     updateStatusbar();
   }
@@ -556,7 +556,7 @@
       </div>
       <div class="grid">
         <div class="panel"><h3>Mapa en tiempo real <span class="pill info">GPS de la app del conductor · 30 s</span></h3>
-          ${QRutaMap.render({ lat: vehicles[0].lat, lng: vehicles[0].lng, accuracyM: 12, width: 720, height: 360, scale: 0.045, markers: vehicles.slice(1).map(v => ({ lat: v.lat, lng: v.lng, color: v.warn ? '#F2A93B' : '#14306B' })) })}
+          ${SalvoMap.render({ lat: vehicles[0].lat, lng: vehicles[0].lng, accuracyM: 12, width: 720, height: 360, scale: 0.045, markers: vehicles.slice(1).map(v => ({ lat: v.lat, lng: v.lng, color: v.warn ? '#F2A93B' : '#14306B' })) })}
           <div class="tblwrap"><table class="tbl"><thead><tr><th>Unidad</th><th>Placa</th><th>Conductor</th><th>Estado</th><th>QR</th></tr></thead><tbody>
             ${vehicles.map(v => `<tr><td><b>${v.unit}</b></td><td class="mono">${v.plate}</td><td class="mono">${v.driver}</td><td>${v.alert ? '<span class="pill bad">Incidente</span>' : v.warn ? '<span class="pill warn">' + v.state + '</span>' : (v.state === 'Sin conductor' || v.state === 'Fuera') ? '<span class="pill lock">' + v.state + '</span>' : '<span class="pill ok">' + v.state + '</span>'}</td><td>${v.warn ? 'v2 · dañado' : 'v3 · activo'}</td></tr>`).join('')}
           </tbody></table></div>
@@ -590,7 +590,7 @@
     const q = new URLSearchParams(location.search);
     setInterval(updateStatusbar, 15000);
     syncRoleUI(); syncNetUI();
-    log('info', 'QRuta demo lista · backend simulado · QR real · GPS real si das permiso');
+    log('info', 'SALVO demo lista · backend simulado · QR real · GPS real si das permiso');
     if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !location.hostname.includes('claude')) {
       navigator.serviceWorker.register('sw.js').then(() => log('ok', 'service worker registrado: la ficha del último vehículo queda disponible sin red')).catch(() => {});
     }

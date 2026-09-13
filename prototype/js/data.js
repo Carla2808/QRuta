@@ -1,9 +1,9 @@
-/* QRuta — datos de demostración.
+/* SALVO — datos de demostración.
  * TODO ES FICTICIO. Los nombres, placas, unidades y perfiles médicos no corresponden
  * a personas ni vehículos reales. El modelo de datos sí refleja el diseño del sistema
  * (ver docs/05-arquitectura-datos-api.md). */
 
-window.QRUTA_DATA = {
+window.SALVO_DATA = {
   // Multi-ciudad desde el día 1: nada de rutas ni teléfonos hardcodeados en la UI.
   cities: {
     SCZ: {

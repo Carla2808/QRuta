@@ -10,7 +10,7 @@ QR físico ──► identificador opaco ──► token de sesión ──► ba
 ```
 
 **Regla de oro: el QR no contiene datos, contiene una llave.** El código impreso resuelve a una
-URL corta `https://qruta.bo/v/SCZ-Q7K3-M9V2`. Todo lo demás vive en el servidor y se decide en
+URL corta `https://salvo.bo/v/SCZ-Q7K3-M9V2`. Todo lo demás vive en el servidor y se decide en
 el momento del escaneo según quién escanea, el estado del QR, el estado del vehículo y si hay
 un incidente abierto.
 
@@ -24,7 +24,7 @@ un incidente abierto.
 | **Expiración** | Sesión 15 min renovable si hay incidente abierto. Acceso elevado (contacto/servicio) **30 min** y atado a un incidente. El QR físico **no expira**; se **versiona**. | Corto para el público, suficiente para una emergencia, siempre auditado. |
 | **Revocación** | Cada placa tiene `version`. Reemplazar una placa crea v(n+1) y **revoca v(n)** al instante. Un QR revocado muestra "Este QR ya no es válido" + acciones de emergencia igual. | Placa robada, dañada o clonada queda inservible en segundos y sin tocar el vehículo. |
 | **QR clonado** (foto de un QR pegada en otro micro) | Detección por **incoherencia geográfica y de patrón**: dos escaneos del mismo código a >3 km en <5 min, o escaneos sostenidos fuera del corredor de la línea; el GPS de la app del conductor sirve de referencia. Alerta al operador, estado `suspect`. | El clon no puede falsificar dónde está el vehículo real. |
-| **QR manipulado** (sticker encima que apunta a otro sitio) | Dominio único `qruta.bo`; la placa lleva impreso el código en texto para cotejar; instrucción "verificá que la dirección diga qruta.bo". Campaña de campo. Los usuarios pueden **reportar QR sospechoso** desde el fallo de escaneo. | Contra phishing físico no hay criptografía que valga: se combate con diseño de placa, texto claro y reporte fácil. |
+| **QR manipulado** (sticker encima que apunta a otro sitio) | Dominio único `salvo.bo`; la placa lleva impreso el código en texto para cotejar; instrucción "verificá que la dirección diga salvo.bo". Campaña de campo. Los usuarios pueden **reportar QR sospechoso** desde el fallo de escaneo. | Contra phishing físico no hay criptografía que valga: se combate con diseño de placa, texto claro y reporte fácil. |
 | **QR reemplazado físicamente** | Solo el operador (rol `fleet_admin`) puede emitir versiones; la instalación se confirma escaneando la placa nueva **desde la app del conductor** junto a la unidad (foto + GPS). | Cadena de custodia de la placa. |
 | **Validación en servidor** | Siempre. La PWA no decide nada; recibe lo que el backend autoriza. Firma **HMAC** del `code` en el path (`/v/SCZ-Q7K3-M9V2.k9f2`) opcional para rechazar códigos inventados sin tocar la base. | Lo que está en el cliente se puede alterar. |
 | **Registro de escaneos** | `scan_events`: código, versión, hora, ciudad, IP truncada, UA, geo aproximada (si la persona la dio), resultado (`ok/revoked/unknown/suspect`). **Sin identidad** del que escanea salvo que reporte. | Auditoría y detección de fraude sin vigilar pasajeros. |

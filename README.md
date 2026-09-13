@@ -1,4 +1,4 @@
-# QRuta
+# SALVO
 
 **Sistema de seguridad digital para el transporte público de Santa Cruz de la Sierra.**
 Cada micro lleva una placa QR que es su identidad digital. Ante un accidente, cualquier persona

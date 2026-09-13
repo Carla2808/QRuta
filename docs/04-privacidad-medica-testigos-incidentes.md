@@ -14,7 +14,7 @@ al día expuesto a pasajeros enojados. El diseño protege ambas cosas.
 | Certificado municipal | Enmascarado | Enmascarado | ✓ | ✓ | — |
 | Foto | ✗ | ✗ | ✓ | ✓ (app conductor la muestra al propio conductor) | Web pública |
 | Teléfono | ✗ | Vía la app (no se muestra) | ✓ durante incidente | ✓ | Web pública |
-| Dirección | ✗ | ✗ | ✗ | Solo RR. HH. del operador, fuera de QRuta | Siempre fuera |
+| Dirección | ✗ | ✗ | ✗ | Solo RR. HH. del operador, fuera de SALVO | Siempre fuera |
 | CI / documento | ✗ | ✗ | Últimos 3 dígitos | ✓ | Web pública |
 | Contactos de emergencia | "Existen: podés pedir que se les avise" | Se ve a sí mismo | ✓ | ✓ nombres | Números al público |
 | Perfil médico | ✗ (borroso + candado) | Tipo de sangre y alergias | Completo | ✗ | Operador, público |
@@ -24,7 +24,7 @@ al día expuesto a pasajeros enojados. El diseño protege ambas cosas.
 **Cómo se eleva el nivel desde la misma página, sin cuenta previa:**
 
 - *Contacto autorizado*: toca "Soy contacto del conductor" → el sistema envía un OTP **al número que el conductor registró**, no al que el usuario escriba. Si la persona lo recibe, es quien dice ser. 30 min, atado al incidente.
-- *Servicio de emergencia*: (a) cuenta institucional (SEDES, Policía, Bomberos, hospitales) con OIDC; o (b) **código de incidente** que el despacho del operador o el operador de QRuta entrega por radio/llamada al equipo que va en camino. Todo acceso queda en auditoría visible al conductor.
+- *Servicio de emergencia*: (a) cuenta institucional (SEDES, Policía, Bomberos, hospitales) con OIDC; o (b) **código de incidente** que el despacho del operador o el operador de SALVO entrega por radio/llamada al equipo que va en camino. Todo acceso queda en auditoría visible al conductor.
 
 ## 4.2 Información médica: Privacy by Design aplicado
 
@@ -42,7 +42,7 @@ al día expuesto a pasajeros enojados. El diseño protege ambas cosas.
 datos de familiares menores, historial de ubicaciones, historial de incidentes del conductor.
 
 El mismo modelo aplica al **perfil de emergencia del pasajero** (opcional): sirve si la
-víctima es quien tiene QRuta instalada o lleva una tarjeta/llavero con su propio QR.
+víctima es quien tiene SALVO instalada o lleva una tarjeta/llavero con su propio QR.
 
 ## 4.3 Función "Soy testigo"
 
@@ -93,5 +93,5 @@ y, si corresponde, notificación (contactos del conductor, reportante con númer
 - **Redondeo por nivel**: público ~50 m (y solo durante la sesión); contacto/servicio exacta con incidente abierto; operador tiempo real.
 - **Mapas**: proveedor detrás de un adaptador por ciudad (MapLibre + teselas propias o Google Maps según costo); **fallback offline esquemático** (los anillos de Santa Cruz en SVG, como en el prototipo) para que la pantalla nunca quede en blanco.
 - **Geocodificación inversa local**: "Av. Santos Dumont y 4º anillo" vale más que coordenadas; se construye con la red vial abierta (OSM) y el catálogo de anillos/radiales.
-- **Compartir ubicación**: enlace `qruta.bo/l/{token}` que muestra el punto y el vehículo por 24 h; mensaje prearmado; Web Share API.
+- **Compartir ubicación**: enlace `salvo.bo/l/{token}` que muestra el punto y el vehículo por 24 h; mensaje prearmado; Web Share API.
 - **Privacidad**: la ubicación del pasajero nunca se guarda fuera de un reporte/testimonio; la del vehículo solo durante la jornada; historial de recorridos disponible al operador 30 días y a la autoridad con requerimiento.

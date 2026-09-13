@@ -1,7 +1,7 @@
 /* Micro 3D low-poly (Three.js r128). Muestra dónde va la placa QR en el vehículo y
  * sirve como "vehículo identificado" en la pantalla de resultado. Geometría procedural:
  * no es un modelo CAD de un micro real. */
-window.QRutaBus3D = (function () {
+window.SalvoBus3D = (function () {
   function mount(container, opts) {
     opts = opts || {};
     if (!window.THREE) { container.innerHTML = '<div class="empty">3D no disponible</div>'; return { dispose() {}, highlight() {} }; }

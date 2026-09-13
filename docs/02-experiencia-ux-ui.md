@@ -40,7 +40,7 @@ respeta `prefers-reduced-motion`.
 ## 2.3 Flujos principales
 
 ```
-[QR físico] → cámara nativa → https://qruta.bo/v/CODE
+[QR físico] → cámara nativa → https://salvo.bo/v/CODE
    ├─ ok        → VEHÍCULO IDENTIFICADO ─┬─ Reportar accidente → tipo → heridos → GPS → INCIDENTE CREADO → ayuda / notificar / testigo / estado
    │                                     ├─ Contactar emergencia (110 / 118 / 119 + operador)
    │                                     ├─ Información crítica (bloqueada → OTP contacto / credencial servicio)
@@ -60,7 +60,7 @@ camino del accidente empieza en la 4/5.
 
 | # | Pantalla | Objetivo | Elementos clave | CTA principal | CTA secundaria | Estados / errores / loading / vacío | Accesibilidad |
 |---|---|---|---|---|---|---|---|
-| 1 | **Splash** | Marca en 1 s, nunca bloquear. | Logo Q, "Identifica. Informa. Protege. Responde." | (auto) | — | Máx. 1,4 s; si hay `?qr=` se salta. | Sin animación con reduced-motion. |
+| 1 | **Splash** | Marca en 1 s, nunca bloquear. | Logo S, "Identifica. Informa. Protege. Responde." | (auto) | — | Máx. 1,4 s; si hay `?qr=` se salta. | Sin animación con reduced-motion. |
 | 2 | **Onboarding** (solo PWA instalada) | Explicar 3 cosas: qué es, qué NO guardamos, cómo escanear. | 3 tarjetas deslizables, ilustración de placa. | "Entendido" | "Crear perfil de emergencia (opcional)" | Se muestra una vez; vacío: no aplica. | Texto ≥ 16 px, orden de foco lineal. |
 | 3 | **Home** | Punto de partida para quien no está en emergencia. | Hero "Escaneá el QR del micro…", accesos: placa física, app conductor, perfil, escaneos recientes. | "Escanear QR" (abre cámara) | Tiles secundarios | Vacío: "Todavía no escaneaste ningún vehículo. Los escaneos quedan en este teléfono." | Contraste AA en hero azul. |
 | 4 | **Escaneo QR** | Leer el código sin pensar. | Visor, retícula, láser, texto "Apuntá al QR". | (auto al detectar) | Atrás · linterna | Estados: buscando → leído → validando → ok/fallo. Error cámara: "Permití la cámara o escribí el código". Sin red: valida contra caché. | Alternativa manual: campo de 10 caracteres. |
@@ -98,7 +98,7 @@ camino del accidente empieza en la 4/5.
 
 ## 2.6 PWA / web de emergencia
 
-- **Ruta canónica**: `https://qruta.bo/v/{code}` (corta, imprimible, dictable). Sin `www`, sin parámetros.
+- **Ruta canónica**: `https://salvo.bo/v/{code}` (corta, imprimible, dictable). Sin `www`, sin parámetros.
 - **Presupuesto de rendimiento**: primer render ≤ 1,5 s en 3G, ≤ 60 KB antes de mostrar la ficha; el 3D (Three.js) y fuentes se cargan **después** del primer render y se omiten en `Save-Data` o conexión lenta.
 - **Progresiva**: HTML servido con la ficha pública ya renderizada (SSR) → hidrata → añade mapa y 3D. Sin JS funcionan: ficha, teléfonos (`tel:`), y un formulario de reporte HTML plano.
 - **Instalable pero opcional**: manifest, ícono, `display: standalone`. Nunca se pide instalar durante una emergencia.
@@ -113,7 +113,7 @@ camino del accidente empieza en la 4/5.
 | **Rápida (4G)** | Todo, incl. 3D y mapa. | — |
 | **Lenta (3G)** | Ficha en <2 s; 3D omitido; mapa estático; imágenes de testigo comprimidas a 1280 px. Banner "Conexión lenta — versión ligera". | Todo el protocolo. |
 | **Señal débil / timeouts** | Reintento automático ×2 con backoff; la UI nunca se queda en spinner >6 s: ofrece "llamar" mientras tanto. | Ficha, llamadas, reporte encolado. |
-| **Sin conexión** | Si la placa se escaneó antes en ese teléfono: ficha cacheada con aviso "datos guardados, hora X". Si no: página offline con **el código escaneado, teléfonos de la ciudad (cacheados por prefijo `SCZ`) y formulario de reporte que se encola**. | `tel:` siempre; SMS prearmado al despacho del operador como canal alternativo (`sms:` con texto: "QRuta INC vehículo SCZ-Q7K3-M9V2 choque heridos ubicación …"). |
+| **Sin conexión** | Si la placa se escaneó antes en ese teléfono: ficha cacheada con aviso "datos guardados, hora X". Si no: página offline con **el código escaneado, teléfonos de la ciudad (cacheados por prefijo `SCZ`) y formulario de reporte que se encola**. | `tel:` siempre; SMS prearmado al despacho del operador como canal alternativo (`sms:` con texto: "SALVO INC vehículo SCZ-Q7K3-M9V2 choque heridos ubicación …"). |
 
 Ideas locales adicionales: **SMS de respaldo** (Bolivia mantiene buena cobertura 2G/SMS donde
 no hay datos) con un número corto del operador que responde con línea/unidad/conductor de

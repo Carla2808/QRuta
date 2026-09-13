@@ -1,7 +1,7 @@
 /* Placa QR física — renderiza un QR REAL (qrcode-generator, MIT) que apunta a la URL de
  * esta demo con ?qr=<code>. Escanearlo con un teléfono abre la experiencia de emergencia
  * directamente, sin instalar nada: así funciona el producto real. */
-window.QRutaQR = (function () {
+window.SalvoQR = (function () {
   function svgFor(text, opts) {
     opts = opts || {};
     const qr = qrcode(0, opts.ecl || 'H'); // ECL H: sigue leyéndose con ~30 % de daño (rayones, sol)
@@ -23,15 +23,15 @@ window.QRutaQR = (function () {
       <path d="${d}" fill="#0b1020"/>
       <rect x="${cx - box / 2}" y="${cx - box / 2}" width="${box}" height="${box}" rx="1.2" fill="#fff"/>
       <rect x="${cx - box / 2 + 0.8}" y="${cx - box / 2 + 0.8}" width="${box - 1.6}" height="${box - 1.6}" rx="0.8" fill="#14306B"/>
-      <text x="${cx}" y="${cx + box * 0.18}" text-anchor="middle" font-family="Bricolage Grotesque, Manrope, sans-serif" font-weight="800" font-size="${box * 0.55}" fill="#fff">Q</text>
+      <text x="${cx}" y="${cx + box * 0.18}" text-anchor="middle" font-family="Bricolage Grotesque, Manrope, sans-serif" font-weight="800" font-size="${box * 0.55}" fill="#fff">S</text>
     </svg>`;
   }
 
   function plate(code, opts) {
     opts = opts || {};
-    // URL pública que codifica la placa. En producción: https://qruta.bo/v/{code}. En la demo,
+    // URL pública que codifica la placa. En producción: https://salvo.bo/v/{code}. En la demo,
     // la del Artifact publicado (el sandbox del iframe no es una URL que un teléfono pueda abrir).
-    const base = window.QRUTA_PUBLIC_URL || (location.origin + location.pathname);
+    const base = window.SALVO_PUBLIC_URL || (location.origin + location.pathname);
     const url = opts.url || (base + (base.includes('?') ? '&' : '?') + 'qr=' + encodeURIComponent(code));
     const cls = 'plate' + (opts.small ? ' small' : '');
     const vehicle = opts.vehicle;

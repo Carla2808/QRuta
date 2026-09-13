@@ -1,6 +1,6 @@
 {
-  "name": "QRuta — Identificación y emergencia del transporte público",
-  "short_name": "QRuta",
+  "name": "SALVO — Identificación y emergencia del transporte público",
+  "short_name": "SALVO",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#14306B",

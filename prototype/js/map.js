@@ -1,7 +1,7 @@
 /* Mapa esquemático de Santa Cruz de la Sierra (anillos + radiales). No es cartografía
  * real: en producción el proveedor de mapas va detrás de un adaptador por ciudad
  * (mapStyle: 'anillos' es solo el fallback offline/ligero de SCZ). */
-window.QRutaMap = (function () {
+window.SalvoMap = (function () {
   // Proyección local aprox. (metros → px) centrada en el 1er anillo (Plaza 24 de Septiembre)
   const CENTER = { lat: -17.7833, lng: -63.1821 };
   function project(lat, lng, w, h, scale) {

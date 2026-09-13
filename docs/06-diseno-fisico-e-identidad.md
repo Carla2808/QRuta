@@ -53,34 +53,46 @@ estaba adentro o afuera).
 
 - Sticker de 4 × 4 cm junto a cada placa: "Apuntá la cámara · No hace falta app".
 - Un cartel A4 en la sede del sindicato y en las paradas de cabecera con la placa gigante y "Así funciona en 3 pasos".
-- Uniforme/credencial del conductor con el pictograma Q para reforzar que "este micro está en QRuta".
+- Uniforme/credencial del conductor con el pictograma S para reforzar que "este micro está en SALVO".
 
-## 6.4 Identidad de marca: nombres
+## 6.4 Identidad de marca: el nombre es **SALVO**
+
+**SALVO** — de *"sano y salvo"* y *"a salvo"*. Es lo que toda persona quiere oír después de un
+accidente y lo que el sistema existe para conseguir. Cumple todos los criterios pedidos:
+
+| Criterio | SALVO |
+|---|---|
+| Corto | 5 letras, 2 sílabas. |
+| Fácil de pronunciar | Igual en español, portugués e italiano; sin problema en inglés ("sal-vo"). |
+| Fácil de recordar | Es una palabra que ya existe con el significado exacto del producto. |
+| Tecnológico | Funciona en mayúsculas como sello/señal (SALVO), y como verbo de acción ("salvo el dato", "salvar"). |
+| Confiable | Connota resultado ("quedó a salvo"), no proceso. |
+| Adaptable a Bolivia | Expresión de uso cotidiano ("llegó sano y salvo"); sin regionalismos que excluyan. |
+| Escalable internacionalmente | Mismo significado en toda Latinoamérica, Brasil e Italia; en inglés se lee como "salvo" (descarga/protección) o "salvage". Dominios sugeridos: `salvo.bo`, `salvo.app`, `salvo.lat`. |
+
+Bajada: **SALVO · Identificación y seguridad del transporte público**. Frase de placa: *"Escaneá y quedá a salvo"*.
+Lema: *Identifica. Informa. Protege. Responde.*
+
+**Sistema de identidad** (aplicado en el prototipo): símbolo "S" en un cuadrado azul con punto
+de cierre rojo (lee como módulo de QR y como escudo); azul `#14306B`, verde `#0F8A5F`, rojo
+`#D7263D`; Bricolage Grotesque para titulares y Manrope para UI; voz directa, en voseo, sin
+exclamaciones; el rojo aparece solo cuando algo es una emergencia.
+
+### Alternativas evaluadas (registro de la decisión)
 
 | Nombre | Concepto | A favor | En contra |
 |---|---|---|---|
-| **QRuta** | QR + ruta. "La ruta tiene QR". | Se explica solo; ya tiene tracción (este repo); dominio `qruta.bo`; escala a cualquier transporte. | Pronunciación "cu-ruta" dudosa; suena a app de rutas, no de seguridad. |
-| **Sello** | El sello de seguridad del vehículo. "Micro sellado". | Corto, español universal, connota verificación oficial y confianza; funciona en marca de placa ("SELLO QRuta"). | Genérico para SEO; existe como palabra común. |
-| **Faro** | Guía a la ayuda hacia el punto exacto. | Cortísimo, pronunciable en cualquier idioma, imagen potente (luz en la emergencia). | Colisiones de marca (Faro Technologies); menos explícito. |
-| **Amparo** | Protección, cobijo. Palabra cálida. | Humano, boliviano, memorable. | Largo; connota seguros/asistencia legal. |
-| **Tarja** | En Bolivia, "tarja" es la placa o etiqueta identificatoria. | Localismo preciso y con sabor; corto. | No escala internacionalmente sin explicación. |
-| **Ayni** | Reciprocidad andina: hoy por vos, mañana por mí. | Profundo, boliviano, corto. | Más altiplánico que camba; muchas marcas ya lo usan. |
-| **Punto Seguro** | El punto (QR) donde empieza la seguridad. | Descriptivo, claro para autoridades. | Dos palabras; genérico. |
-| **Escudo** | Protección del pasajero y del conductor. | Fuerte, visual, señalético. | Usado por seguros y antivirus. |
-| **Vía** | Vía segura, vía de emergencia. | Mínimo, escalable, elegante. | Demasiado genérico; difícil de registrar. |
-| **Cruz** | Por Santa Cruz y por la cruz de emergencia. | Local y sanitario a la vez. | Confusión con Cruz Roja (y marca protegida). |
+| QRuta | QR + ruta. | Se explica solo; nombre del repositorio. | Suena a app de rutas, no de seguridad; pronunciación dudosa. |
+| Sello | El sello de seguridad del vehículo. | Corto, institucional, marca-categoría ("¿tiene Sello?"). | Palabra común, difícil de registrar. |
+| Faro | Guía a la ayuda hacia el punto exacto. | Cortísimo, emocional, internacional. | Colisiones de marca; menos explícito. |
+| Amparo | Protección, cobijo. | Humano, boliviano. | Largo; connota seguros/legal. |
+| Tarja | Placa identificatoria (localismo boliviano). | Preciso y con sabor local. | No escala fuera de Bolivia. |
+| Ayni | Reciprocidad andina. | Profundo, corto. | Más altiplánico que camba; muy usado. |
+| Punto Seguro | El punto donde empieza la seguridad. | Claro para autoridades. | Dos palabras, genérico. |
+| Escudo | Protección de pasajero y conductor. | Fuerte, señalético. | Usado por seguros y antivirus. |
+| Vía | Vía segura. | Mínimo. | Demasiado genérico. |
+| Cruz | Santa Cruz + cruz sanitaria. | Local. | Confusión con Cruz Roja (marca protegida). |
 
-**Top 3**
-
-1. **QRuta** — Es la que mejor explica el mecanismo sin una palabra más, ya está en uso y su
-   debilidad (que suene a "rutas") se corrige con la bajada: *"QRuta · Identificación y seguridad
-   del transporte público"*. El prototipo usa esta marca; cambiarla es una constante.
-2. **Sello** — La mejor candidata si se busca una marca-categoría ("¿tiene Sello?") y un fuerte
-   componente institucional para ciudades y operadores.
-3. **Faro** — La más internacional y emocional; ideal si el producto crece hacia respuesta a
-   emergencias en general (no solo transporte).
-
-**Sistema de identidad** (aplicado en el prototipo): símbolo "Q" con punto de cierre rojo dentro
-de un cuadrado azul (lee como módulo de QR y como escudo); azul `#14306B`, verde `#0F8A5F`,
-rojo `#D7263D`; Bricolage Grotesque para titulares y Manrope para UI; voz directa, en voseo,
-sin exclamaciones; el rojo aparece solo cuando algo es una emergencia.
+De estas, las tres más sólidas eran **Sello, Faro y QRuta**; **SALVO** las supera porque une lo
+institucional de Sello, lo emocional de Faro y la claridad de QRuta en una sola palabra que
+además es el resultado que promete el sistema.

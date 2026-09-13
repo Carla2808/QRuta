@@ -1,6 +1,6 @@
 # 1 · Concepto, problema, solución y diferencial
 
-> **QRuta** es un sistema de seguridad digital para el transporte público de Santa Cruz de la
+> **SALVO** es un sistema de seguridad digital para el transporte público de Santa Cruz de la
 > Sierra. Cada vehículo lleva una placa QR que es su identidad digital. Cuando ocurre un
 > accidente, cualquier persona la escanea con la cámara del teléfono —sin app, sin cuenta— y en
 > menos de tres segundos sabe **qué vehículo es, de qué línea, quién lo conduce, dónde está y a
@@ -55,7 +55,7 @@ Lo que no existe —ni en Santa Cruz ni, hasta donde encontramos, en ninguna ciu
 es la combinación:
 
 1. **Diseñado para el accidente, no para el viaje.** Los QR de Delhi verifican al chofer *antes*
-   de subir; los QR médicos identifican a la *víctima*. QRuta identifica al **vehículo + conductor
+   de subir; los QR médicos identifican a la *víctima*. SALVO identifica al **vehículo + conductor
    + operador** cuando ya pasó algo, y dispara un protocolo.
 2. **Cero fricción absoluta.** Sin app (Delhi exige Himmat Plus), sin registro, sin cuenta. La
    cámara nativa basta. En una emergencia, cada pantalla extra pierde gente.
@@ -78,7 +78,7 @@ con una vagoneta. Mariela (32) sale de una farmacia y ve gente bajando aturdida.
 | t | Mariela hace | El sistema hace | Emoción que buscamos |
 |---|---|---|---|
 | 0:00 | Ve la placa azul junto a la puerta: "ESCANÉAME · EN CASO DE ACCIDENTE". | — | "Ah, hay algo que puedo hacer." |
-| 0:05 | Abre la cámara, apunta. | El QR abre `qruta.bo/v/SCZ-Q7K3-M9V2`. `POST /qr/scan` valida, registra hora/ciudad, emite token de 15 min. | Sin decidir nada todavía. |
+| 0:05 | Abre la cámara, apunta. | El QR abre `salvo.bo/v/SCZ-Q7K3-M9V2`. `POST /qr/scan` valida, registra hora/ciudad, emite token de 15 min. | Sin decidir nada todavía. |
 | 0:08 | Ve **✓ VEHÍCULO IDENTIFICADO — Línea 123 · Unidad 045 · Placa · Conductor registrado Juan Carlos M.** y un mapa con el punto. | Renderiza ficha pública; el micro 3D y el mapa comunican "esto es real y es este vehículo". | **Confianza.** "Está registrado. Hay alguien detrás." |
 | 0:12 | Toca **REPORTAR ACCIDENTE**. | Modo emergencia: pantalla oscura, 4 acciones enormes. | Foco. Nada compite por su atención. |
 | 0:20 | Elige *Choque* → *Hay heridos* → confirma. | Pide GPS (o usa la última posición del vehículo). Crea **INC-2026-SCZ-000245**. Notifica al operador. Pide confirmación al conductor por la app. | "Ya quedó registrado. No depende de mi memoria." |
@@ -95,7 +95,7 @@ buscar papeles; y hay un ID único que policía, seguro, sindicato y hospital ci
 
 ## 1.5 Innovación local: por qué así y no como en Silicon Valley
 
-- **El micro cruceño es una cooperativa de dueños**, no una flota. El "operador" en QRuta es el
+- **El micro cruceño es una cooperativa de dueños**, no una flota. El "operador" en SALVO es el
   sindicato/línea (ej. Sindicato 21 de Mayo, Andrés Ibáñez, 24 de Septiembre), y el dueño de la
   unidad es un rol adicional. Los precios y contratos se piensan **por unidad y por línea**, no
   por empresa.
@@ -110,5 +110,5 @@ buscar papeles; y hay un ID único que policía, seguro, sindicato y hospital ci
   seguimiento de pasajeros, escaneos anónimos por defecto.
 - **Sol de 35 °C y lluvia tropical**: placa reflectiva laminada UV, QR con ECL H, interfaz clara
   de alto contraste (no un modo oscuro bonito que no se ve al mediodía).
-- **El municipio ya tiene un registro (2024)** y ya probó QR para pago en dos líneas: QRuta se
+- **El municipio ya tiene un registro (2024)** y ya probó QR para pago en dos líneas: SALVO se
   presenta como **la capa de seguridad que usa lo que ya existe**, no como otro trámite.

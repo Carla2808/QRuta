@@ -20,7 +20,7 @@
 
 **No incluye** (a propósito): app iOS nativa, perfil del pasajero, integración con 911/CAD, pago, rutas, chat, valoraciones de conductores.
 
-**Métricas de éxito del piloto** (definir umbrales con el operador): tiempo mediano Reportado→Operador enterado (<60 s); % de unidades con jornada abierta en horario (>80 %); escaneos espontáneos/unidad/semana; tasa de placas dañadas al mes (<3 %); % de incidentes reales con ID QRuta citado por Tránsito o el hospital; NPS de conductores sobre privacidad; cero fugas de datos.
+**Métricas de éxito del piloto** (definir umbrales con el operador): tiempo mediano Reportado→Operador enterado (<60 s); % de unidades con jornada abierta en horario (>80 %); escaneos espontáneos/unidad/semana; tasa de placas dañadas al mes (<3 %); % de incidentes reales con ID SALVO citado por Tránsito o el hospital; NPS de conductores sobre privacidad; cero fugas de datos.
 
 ## 7.2 Roadmap
 
@@ -38,7 +38,7 @@ El pagador **no es el pasajero** (el escaneo es y será gratis). Tres capas de i
 | Fuente | Cómo | Orden de magnitud (a validar) |
 |---|---|---|
 | **Operadores (sindicatos/líneas)** | Suscripción por unidad/mes que incluye placas, reposición, app del conductor y panel. Se vende como *cumplimiento + reputación + protección legal del conductor* (evidencia y trazabilidad en un accidente). | Bs 15–25 / unidad / mes. 5 000 unidades → Bs 1,0–1,5 M/año. |
-| **Municipio / gobernación** | Licencia de plataforma para el panel municipal multi-operador, integración con el registro 2024 y datos agregados de siniestralidad; puede subsidiar la placa como requisito de la tarjeta de operación. | Contrato anual; convierte a QRuta en infraestructura, no en app. |
+| **Municipio / gobernación** | Licencia de plataforma para el panel municipal multi-operador, integración con el registro 2024 y datos agregados de siniestralidad; puede subsidiar la placa como requisito de la tarjeta de operación. | Contrato anual; convierte a SALVO en infraestructura, no en app. |
 | **Aseguradoras (SOAT) y hospitales** | Acceso con consentimiento a la ficha de incidente (menos fraude, siniestros más rápidos); patrocinio de placas con marca discreta *fuera* de la zona de señal. | Por incidente o anual. |
 | **Complementos** | Tarjeta/llavero de perfil de emergencia para pasajeros (Bs 20–30 una vez); placas para flotas privadas (escolares, empresas). | Marginal, pero acerca al público. |
 
@@ -55,7 +55,7 @@ Principio: **nunca monetizar datos de pasajeros ni de ubicación**; los datos ag
 3. **Prototipo con conductores** (este repo): comprensión de niveles de privacidad; disposición a iniciar jornada; reacción al SOS.
 4. **Test bajo estrés simulado** con 10 personas: tiempo hasta crear incidente; errores; comprensión de "Ayuda solicitada".
 5. **Mesa con Tránsito, SEDES y un hospital**: ¿aceptan el ID? ¿qué ficha necesitan? ¿qué credencial usarían?
-6. **Piloto de 90 días** con la línea, con métricas del §7.1 y un comité (operador, municipio, QRuta) que revise cada incidente.
+6. **Piloto de 90 días** con la línea, con métricas del §7.1 y un comité (operador, municipio, SALVO) que revise cada incidente.
 7. **Auditoría de seguridad externa** antes de abrir a más líneas.
 
 ## 7.5 Riesgos y soluciones
@@ -66,7 +66,7 @@ Principio: **nunca monetizar datos de pasajeros ni de ubicación**; los datos ag
 | **Conductor no inicia jornada** → QR muestra "sin conductor asignado" | Alta / medio | Inicio desde el teléfono del dueño o con código en cabecera; recordatorio al arrancar; incentivo del operador; el vehículo sigue identificado aunque falte el conductor. |
 | **Conflicto político Alcaldía–transporte** (paros, cambios de reglas) | Alta / medio | Arquitectura por operador, independiente del municipio; el municipio se suma como cliente, no como requisito. |
 | **Placas vandalizadas o robadas** | Media / bajo | Reflectivo laminado, "void", revocación instantánea, reposición <Bs 35, alerta automática por escaneos fallidos. |
-| **QR falsos para phishing** | Media / alto | Dominio único, código impreso, reporte de QR sospechoso, campaña "mirá que diga qruta.bo", detección geográfica. |
+| **QR falsos para phishing** | Media / alto | Dominio único, código impreso, reporte de QR sospechoso, campaña "mirá que diga salvo.bo", detección geográfica. |
 | **Falsos reportes / bromas** | Media / medio | Token de sesión, GPS cruzado, confirmación del conductor, estado *Verificando* antes de escalar, bloqueo de dispositivo reincidente. |
 | **Fuga de datos médicos** | Baja / crítico | Cifrado por campo, sin endpoint público, grants con vencimiento, auditoría encadenada, pentest, mínimo dato. |
 | **Servicios de emergencia no adoptan el ID** | Media / alto | Convenios en MVP 2; mientras tanto la ficha se dicta por teléfono y el ID viaja en el WhatsApp del operador; el valor para el operador y la familia existe igual. |

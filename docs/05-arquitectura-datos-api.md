@@ -84,7 +84,7 @@ ScanEvent (append-only)   Location (append-only, particionada)   AuditLog (appen
 | `POST /incidents/{id}/request-help` `{services[]}` | Marca *Ayuda solicitada*, envía ficha al despacho | sesión |
 | `POST /incidents/{id}/notify` `{targets[]}` | Notifica contactos del conductor / operador (el sistema marca; el usuario no ve números) | sesión |
 | `POST /incidents/{id}/witness` (multipart) | Testimonio + evidencias | sesión |
-| `POST /incidents/{id}/share-location` | Enlace `qruta.bo/l/{token}` 24 h | sesión |
+| `POST /incidents/{id}/share-location` | Enlace `salvo.bo/l/{token}` 24 h | sesión |
 | `POST /qr/{code}/report-suspicious` | Reporta placa falsa/dañada | — |
 | `GET /cities/{code}/emergency-numbers` | Directorio (cacheable, offline) | — |
 | `POST /sync/queue` | Recibe reportes/testimonios encolados offline (idempotente por `client_id`) | sesión |
