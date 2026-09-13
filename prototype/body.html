@@ -58,6 +58,13 @@
 
 <section class="dash" id="dash" hidden aria-label="Panel del operador"></section>
 
+<script>
+  // La demo publicada vive en un iframe cuyo origen no es navegable desde un teléfono; el QR
+  // apunta entonces a la página del Artifact. En local (localhost/file) usa la URL local.
+  if (!/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && location.protocol !== 'file:') {
+    window.QRUTA_PUBLIC_URL = 'https://claude.ai/code/artifact/7ca6c6e6-b484-4d67-a615-a10211b53c62';
+  }
+</script>
 <script src="vendor/three-0.128.0/three.min.js"></script>
 <script src="vendor/qrcode-generator-1.4.4.js"></script>
 <script src="js/data.js"></script>

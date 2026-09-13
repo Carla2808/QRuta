@@ -29,7 +29,10 @@ window.QRutaQR = (function () {
 
   function plate(code, opts) {
     opts = opts || {};
-    const url = opts.url || (location.origin + location.pathname + '?qr=' + encodeURIComponent(code));
+    // URL pública que codifica la placa. En producción: https://qruta.bo/v/{code}. En la demo,
+    // la del Artifact publicado (el sandbox del iframe no es una URL que un teléfono pueda abrir).
+    const base = window.QRUTA_PUBLIC_URL || (location.origin + location.pathname);
+    const url = opts.url || (base + (base.includes('?') ? '&' : '?') + 'qr=' + encodeURIComponent(code));
     const cls = 'plate' + (opts.small ? ' small' : '');
     const vehicle = opts.vehicle;
     return `<div class="${cls}" data-code="${code}">
