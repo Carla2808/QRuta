@@ -174,7 +174,7 @@
       <button class="tile" data-action="go" data-to="plate"><b>Ver la placa QR física</b><span>Cómo se ve en el micro y dónde va</span></button>
       <button class="tile" data-action="scan" data-code="SCZ-A1B2-C3D4"><b>Probar un QR revocado</b><span>Qué pasa con una placa vieja o clonada</span></button>
       <button class="tile" data-action="go" data-to="driverapp"><b>App del conductor</b><span>Jornada, vehículo, SOS</span></button>
-      <button class="tile" data-action="go" data-to="profile"><b>Mi perfil de emergencia</b><span>Opcional. Datos médicos y contactos</span></button>
+      <button class="tile" data-action="go" data-to="profile"><b>Mi perfil de emergencia</b><span>${S.profile ? "✓ Activo · " + S.profile.contacts.length + " contacto(s)" : "Opcional. Datos médicos y contactos"}</span></button>
     </div>
     <div class="eyebrow">Escaneos recientes</div>
     ${S.scanLog.length ? S.scanLog.slice(0, 3).map(s => `<button class="tile" data-action="scan" data-code="${s.code}"><b>${D.routes[s.vehicle.routeId].name} · Unidad ${s.vehicle.unitNumber}</b><span>${hhmm(s.at)} · ${s.code}</span></button>`).join('') : `<div class="empty">Todavía no escaneaste ningún vehículo.<br>Los escaneos quedan en este teléfono, no en una cuenta.</div>`}
@@ -289,13 +289,13 @@
     </div>`;
   };
 
-  V.call = () => `<div class="s">
+  V.call = () => { const city = S.city || D.cities.SCZ; const v = S.vehicle; return `<div class="s">
     <div class="appbar"><button class="back" data-action="back">${ICON.back}</button><h1>Contactar emergencia</h1></div>
-    <p class="lead">Números oficiales de ${S.city.name}. Al llamar, tené a mano: <b>línea ${S.route.number}, unidad ${S.vehicle.unitNumber}, ${S.vehicle.lastKnownLocation.label}</b>.</p>
-    ${S.city.emergencyNumbers.map(n => `<a class="btn danger left" href="tel:${n.number}" data-action="tel" data-num="${n.number}">${ICON.phone}<span class="txt">${n.label}<span class="sub">Marcar ${n.number}</span></span><b style="font-family:var(--font-mono);font-size:22px">${n.number}</b></a>`).join('')}
-    <button class="btn ghost left" data-action="notify-operator">${ICON.bus}<span class="txt">Avisar al operador de la línea<span class="sub">${S.operator.name} · despacho</span></span></button>
+    <p class="lead">Números oficiales de ${city.name}. ${v ? `Al llamar, tené a mano: <b>línea ${S.route.number}, unidad ${v.unitNumber}, ${v.lastKnownLocation.label}</b>.` : S.person ? `Al llamar, mencioná que la persona tiene <b>perfil SALVO ${S.person.code}</b>.` : ''}</p>
+    ${city.emergencyNumbers.map(n => `<a class="btn danger left" href="tel:${n.number}" data-action="tel" data-num="${n.number}">${ICON.phone}<span class="txt">${n.label}<span class="sub">Marcar ${n.number}</span></span><b style="font-family:var(--font-mono);font-size:22px">${n.number}</b></a>`).join('')}
+    ${v ? `<button class="btn ghost left" data-action="notify-operator">${ICON.bus}<span class="txt">Avisar al operador de la línea<span class="sub">${S.operator.name} · despacho</span></span></button>` : ''}
     <p class="legalnote">Los números vienen del directorio de la ciudad, no están fijos en la app. Validados con la autoridad antes del piloto.</p>
-  </div>`;
+  </div>`; };
 
   V.contacts = () => `<div class="s">
     <div class="appbar"><button class="back" data-action="back">${ICON.back}</button><h1>Contacto de emergencia</h1></div>
@@ -445,13 +445,136 @@
     </div>`;
   };
 
-  V.profile = () => `<div class="s">
-    <div class="appbar"><button class="back" data-action="home">${ICON.back}</button><h1>Mi perfil de emergencia</h1></div>
-    <p class="lead">Opcional. Sirve si vos sos quien sufre el accidente: los servicios de emergencia lo ven al escanear tu propio QR (tarjeta/llavero) o desde un incidente donde estés registrado.</p>
-    <div class="medgrid"><div class="med"><span class="k">Tipo de sangre</span><span class="v" style="color:var(--muted)">—</span></div><div class="med"><span class="k">Alergias</span><span class="v" style="color:var(--muted)">—</span></div><div class="med wide"><span class="k">Contactos de emergencia</span><span class="v" style="color:var(--muted);font-size:14px">Nadie todavía</span></div></div>
-    <div class="actions"><button class="btn primary" data-action="toast" data-msg="En el MVP el perfil se crea con número de teléfono verificado (OTP)">Crear perfil</button></div>
-    <div class="eyebrow">Historial</div>${S.scanLog.length ? S.scanLog.map(s => `<div class="card tight kv"><span class="k">${hhmm(s.at)}</span><span class="v">L${D.routes[s.vehicle.routeId].number} · U${s.vehicle.unitNumber}</span></div>`).join('') : '<div class="empty">Sin escaneos ni reportes.</div>'}
-  </div>`;
+  // ------------------------------------------------------------ perfil de emergencia (pasajero)
+  // Se guarda SOLO en este teléfono (localStorage). En producción: backend cifrado por campo,
+  // teléfono verificado por OTP, consentimiento fechado. Aquí el OTP y la API son simulados.
+  const PKEY = 'salvo_profile_v1';
+  const BLOOD = ['O+', 'O−', 'A+', 'A−', 'B+', 'B−', 'AB+', 'AB−', 'No sé'];
+  function loadProfile() { try { const raw = localStorage.getItem(PKEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+  function saveProfile(pr) { try { localStorage.setItem(PKEY, JSON.stringify(pr)); } catch (e) { log('warn', 'no se pudo guardar en este navegador (modo privado?) — el perfil vive solo en memoria'); } }
+  function personCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let c = ''; for (let i = 0; i < 4; i++) c += A[Math.floor(Math.random() * A.length)]; return 'SCZ-P-' + c; }
+  function maskPhone(ph) { const d = (ph || '').replace(/\D/g, ''); return d.length >= 4 ? '+591 ' + d.slice(0, 1) + '•• ••• ' + d.slice(-2) : '—'; }
+  function newForm(base) { return { step: 1, phone: '', otpSent: false, otpOk: false, otp: '', data: Object.assign({ firstName: '', lastName: '', birthYear: '', bloodType: '', allergies: '', conditions: '', medications: '', notes: '' }, base ? base.data : {}), contacts: base ? base.contacts.map(c => Object.assign({}, c)) : [], newContact: { name: '', relation: '', phone: '', channel: 'whatsapp' }, consent: false, editing: !!base }; }
+  S.profile = loadProfile();
+
+  V.profile = () => {
+    const pr = S.profile;
+    if (!pr) return `<div class="s">
+      <div class="appbar"><button class="back" data-action="home">${ICON.back}</button><h1>Mi perfil de emergencia</h1></div>
+      <p class="lead">Opcional. Sirve si <b>vos</b> sos quien sufre el accidente: los servicios de emergencia lo ven al escanear tu tarjeta SALVO o desde un incidente donde estés registrado.</p>
+      <div class="card" style="display:grid;gap:10px">
+        <div class="row"><span class="pill ok">${ICON.lock} Privado</span><span style="font-size:13px;color:var(--muted)">Solo lo ven servicios acreditados y contactos que vos elijas.</span></div>
+        <div class="row"><span class="pill info">2 min</span><span style="font-size:13px;color:var(--muted)">Teléfono verificado, datos médicos mínimos, contactos.</span></div>
+        <div class="row"><span class="pill lock">Reversible</span><span style="font-size:13px;color:var(--muted)">Lo podés editar o borrar en un toque, cuando quieras.</span></div>
+      </div>
+      <div class="medgrid"><div class="med"><span class="k">Tipo de sangre</span><span class="v" style="color:var(--muted)">—</span></div><div class="med"><span class="k">Alergias</span><span class="v" style="color:var(--muted)">—</span></div><div class="med wide"><span class="k">Contactos de emergencia</span><span class="v" style="color:var(--muted);font-size:14px">Nadie todavía</span></div></div>
+      <div class="actions"><button class="btn primary" data-action="profile-start">${ICON.user}<span class="txt">Crear mi perfil<span class="sub">Empieza verificando tu teléfono</span></span></button></div>
+      <div class="eyebrow">Historial en este teléfono</div>${historyList()}
+    </div>`;
+    const d = pr.data;
+    return `<div class="s">
+      <div class="appbar"><button class="back" data-action="home">${ICON.back}</button><h1>Mi perfil de emergencia</h1><div class="spacer"></div><span class="pill ok">✓ Activo</span></div>
+      <div class="card driver-row"><div class="avatar">${(d.firstName[0] || '?')}${(d.lastName[0] || '')}</div><div class="grow"><b>${d.firstName} ${d.lastName}</b><span>Teléfono verificado ${maskPhone(pr.phone)} · desde ${pr.createdAt.slice(0, 10)}</span></div></div>
+      <div class="medgrid">
+        <div class="med"><span class="k">Tipo de sangre</span><span class="v">${d.bloodType || '—'}</span></div>
+        <div class="med"><span class="k">Nacimiento</span><span class="v">${d.birthYear || '—'}</span></div>
+        <div class="med wide"><span class="k">Alergias</span><span class="v">${d.allergies || 'Ninguna registrada'}</span></div>
+        <div class="med wide"><span class="k">Condiciones</span><span class="v" style="font-size:15px">${d.conditions || '—'}</span></div>
+        <div class="med wide"><span class="k">Medicación</span><span class="v" style="font-size:15px">${d.medications || '—'}</span></div>
+        ${d.notes ? `<div class="med wide"><span class="k">Notas</span><span class="v" style="font-size:14px">${d.notes}</span></div>` : ''}
+      </div>
+      <div class="card"><div class="eyebrow">Contactos de emergencia</div>
+        ${pr.contacts.length ? pr.contacts.map(c => `<div class="contactline"><div class="avatar" style="width:36px;height:36px;font-size:13px">${c.name[0]}</div><div><b>${c.name}</b><br><span style="color:var(--muted)">${c.relation || 'Contacto'} · ${maskPhone(c.phone)} · ${c.channel === 'sms' ? 'SMS' : 'WhatsApp'}</span></div><span class="st pill ${c.verified ? 'ok' : 'warn'}">${c.verified ? 'verificado' : 'sin verificar'}</span></div>`).join('') : '<div class="empty" style="margin-top:8px">Sin contactos. Agregá al menos uno.</div>'}
+      </div>
+      <button class="card" data-action="go" data-to="personcard" style="border:0;text-align:left;width:100%;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center">
+        <div style="width:54px">${SalvoQR.svgFor(personUrl(pr.code), { ecl: 'M' })}</div>
+        <div><b style="font-size:14px">Mi tarjeta SALVO</b><br><span style="font-size:12px;color:var(--muted)">QR personal para billetera, casco o llavero · ${pr.code}</span></div>${ICON.back.replace('M15 6l-6 6 6 6', 'M9 6l6 6-6 6')}
+      </button>
+      <div class="card kv"><span class="k">Quién vio mis datos</span><span class="v">${pr.audit.length ? pr.audit.length + ' acceso(s)' : 'Nadie todavía'}</span>${pr.audit.map(a => `<span class="k">${a.at}</span><span class="v" style="font-weight:600;font-size:13px">${a.who}</span>`).join('')}</div>
+      <div class="actions two"><button class="btn ghost sm" data-action="profile-edit">Editar</button><button class="btn line sm" style="color:var(--rojo);border-color:#f5b2bb" data-action="profile-delete">Borrar perfil</button></div>
+      <p class="legalnote">Consentimiento dado el ${pr.consentAt.slice(0, 10)}. Guardado en este teléfono (DEMO). En producción: cifrado por campo en el servidor y auditoría de cada acceso.</p>
+      <div class="eyebrow">Historial en este teléfono</div>${historyList()}
+    </div>`;
+  };
+  function historyList() { return S.scanLog.length ? S.scanLog.map(s => `<div class="card tight kv"><span class="k">${hhmm(s.at)}</span><span class="v">L${D.routes[s.vehicle.routeId].number} · U${s.vehicle.unitNumber}</span></div>`).join('') : '<div class="empty">Sin escaneos ni reportes.</div>'; }
+  function personUrl(code) { const base = window.SALVO_PUBLIC_URL || (location.origin + location.pathname); return base + (base.includes('?') ? '&' : '?') + 'p=' + encodeURIComponent(code); }
+
+  V.profilecreate = () => {
+    const f = S.pform; const d = f.data;
+    const head = (t) => `<div class="appbar"><button class="back" data-action="profile-back">${ICON.back}</button><h1>${t}</h1><div class="spacer"></div><span class="pill lock">${f.step}/4</span></div>`;
+    if (f.step === 1) return `<div class="s">${head(f.editing ? 'Confirmar teléfono' : 'Tu teléfono')}
+      <p class="lead">Lo usamos para verificar que sos vos y para avisarte si alguien consulta tu perfil. No se muestra a nadie.</p>
+      <div class="field"><label for="pf-phone">Número de celular</label><input id="pf-phone" inputmode="tel" placeholder="7xx xx xxx" value="${f.phone}" data-bind="phone" ${f.otpSent ? 'disabled' : ''}></div>
+      ${f.otpSent ? `<div class="field"><label for="pf-otp">Código que te llegó por SMS / WhatsApp</label><input id="pf-otp" inputmode="numeric" maxlength="4" placeholder="••••" value="${f.otp}" data-bind="otp" style="font-family:var(--font-mono);font-size:22px;letter-spacing:.3em;text-align:center"></div>
+        <div class="warnbox"><div><b>DEMO</b>No se envía ningún SMS real. El código es <b style="font-family:var(--font-mono)">${f.demoOtp}</b>.</div></div>
+        <button class="btn primary" data-action="profile-otp-verify">Verificar</button><button class="btn ghost sm" data-action="profile-otp-resend">Reenviar código</button>`
+      : `<button class="btn primary" data-action="profile-otp-send">Enviarme un código</button>`}
+    </div>`;
+    if (f.step === 2) return `<div class="s">${head('Tus datos')}
+      <p class="lead">Solo lo que un médico necesita en el primer minuto. Todo es opcional salvo el nombre.</p>
+      <div class="choices" style="grid-template-columns:1fr 1fr"><div class="field"><label for="pf-fn">Nombre</label><input id="pf-fn" value="${d.firstName}" data-bind="data.firstName" autocomplete="given-name"></div><div class="field"><label for="pf-ln">Apellido</label><input id="pf-ln" value="${d.lastName}" data-bind="data.lastName" autocomplete="family-name"></div></div>
+      <div class="choices" style="grid-template-columns:1fr 1fr"><div class="field"><label for="pf-bt">Tipo de sangre</label><select id="pf-bt" data-bind="data.bloodType"><option value="">Elegir…</option>${BLOOD.map(b => `<option ${d.bloodType === b ? 'selected' : ''}>${b}</option>`).join('')}</select></div><div class="field"><label for="pf-by">Año de nacimiento</label><input id="pf-by" inputmode="numeric" maxlength="4" placeholder="1994" value="${d.birthYear}" data-bind="data.birthYear"></div></div>
+      <div class="field"><label for="pf-al">Alergias (medicamentos, alimentos)</label><input id="pf-al" placeholder="Ej.: penicilina" value="${d.allergies}" data-bind="data.allergies"></div>
+      <div class="field"><label for="pf-co">Condiciones que importan en una emergencia</label><input id="pf-co" placeholder="Ej.: diabetes tipo 1, epilepsia, embarazo" value="${d.conditions}" data-bind="data.conditions"></div>
+      <div class="field"><label for="pf-me">Medicación habitual</label><input id="pf-me" placeholder="Ej.: insulina, anticoagulantes" value="${d.medications}" data-bind="data.medications"></div>
+      <div class="field"><label for="pf-no">Notas para el personal médico (opcional)</label><textarea id="pf-no" placeholder="Ej.: usa audífono, marcapasos, idioma…" data-bind="data.notes" style="min-height:64px">${d.notes}</textarea></div>
+      <button class="btn primary" data-action="profile-next">Continuar</button>
+      <p class="legalnote">No pedimos CI, dirección ni historial clínico. Minimización de datos por diseño.</p>
+    </div>`;
+    if (f.step === 3) { const c = f.newContact; return `<div class="s">${head('Contactos de emergencia')}
+      <p class="lead">A quién avisar si te pasa algo. Máximo 3. Les llegará un aviso con lugar, hora y vehículo; nunca tus datos médicos.</p>
+      ${f.contacts.length ? `<div class="card">${f.contacts.map((k, i) => `<div class="contactline"><div class="avatar" style="width:36px;height:36px;font-size:13px">${k.name[0]}</div><div class="grow"><b>${k.name}</b><br><span style="color:var(--muted)">${k.relation || 'Contacto'} · ${maskPhone(k.phone)} · ${k.channel === 'sms' ? 'SMS' : 'WhatsApp'}</span></div><button class="btn ghost sm" style="width:auto;min-height:36px;padding:6px 10px" data-action="profile-contact-remove" data-i="${i}" aria-label="Quitar ${k.name}">Quitar</button></div>`).join('')}</div>` : ''}
+      ${f.contacts.length < 3 ? `<div class="card" style="display:grid;gap:10px">
+        <div class="choices" style="grid-template-columns:1fr 1fr"><div class="field"><label for="pc-name">Nombre</label><input id="pc-name" value="${c.name}" data-bind="newContact.name"></div><div class="field"><label for="pc-rel">Relación</label><input id="pc-rel" placeholder="Madre, pareja, amigo…" value="${c.relation}" data-bind="newContact.relation"></div></div>
+        <div class="choices" style="grid-template-columns:1fr 1fr"><div class="field"><label for="pc-phone">Celular</label><input id="pc-phone" inputmode="tel" placeholder="7xx xx xxx" value="${c.phone}" data-bind="newContact.phone"></div><div class="field"><label for="pc-ch">Canal</label><select id="pc-ch" data-bind="newContact.channel"><option value="whatsapp" ${c.channel === 'whatsapp' ? 'selected' : ''}>WhatsApp</option><option value="sms" ${c.channel === 'sms' ? 'selected' : ''}>SMS</option></select></div></div>
+        <button class="btn ghost sm" data-action="profile-contact-add">+ Agregar contacto</button></div>` : ''}
+      <button class="btn primary" data-action="profile-next" ${f.contacts.length ? '' : 'disabled style="opacity:.5"'}>Continuar</button>
+      <p class="legalnote">Cada contacto recibe un mensaje para confirmar que acepta ser tu contacto de emergencia (aquí: simulado).</p>
+    </div>`; }
+    return `<div class="s">${head('Consentimiento')}
+      <div class="card" style="display:grid;gap:8px"><b style="font-size:15px">Quién ve qué</b>
+        <div class="kv"><span class="k">Cualquier persona que escanee tu tarjeta</span><span class="v" style="font-size:13px">Nombre + inicial, "tiene perfil", botón para avisar a tus contactos</span>
+        <span class="k">Tus contactos</span><span class="v" style="font-size:13px">Lugar y hora del incidente</span>
+        <span class="k">Servicios de emergencia acreditados</span><span class="v" style="font-size:13px">Todo el perfil médico, con registro de acceso</span>
+        <span class="k">Operadores de transporte</span><span class="v" style="font-size:13px">Nada</span></div></div>
+      <div class="toggle"><div><b>Acepto que SALVO guarde estos datos para emergencias</b><span>Podés editarlos o borrarlos cuando quieras. Se conservan hasta que los borres o pasen 12 meses sin renovar.</span></div><button class="switch" role="switch" aria-checked="${f.consent}" data-action="profile-consent"><span class="sr-only">Acepto</span></button></div>
+      <div class="card kv"><span class="k">Nombre</span><span class="v">${d.firstName} ${d.lastName}</span><span class="k">Sangre</span><span class="v">${d.bloodType || '—'}</span><span class="k">Alergias</span><span class="v">${d.allergies || '—'}</span><span class="k">Contactos</span><span class="v">${f.contacts.length}</span></div>
+      <button class="btn green" data-action="profile-save" ${f.consent ? '' : 'disabled style="opacity:.5"'}>${ICON.check}<span>${f.editing ? 'Guardar cambios' : 'Crear perfil'}</span></button>
+    </div>`;
+  };
+
+  V.personcard = () => { const pr = S.profile; return `<div class="s">
+    <div class="appbar"><button class="back" data-action="back">${ICON.back}</button><h1>Mi tarjeta SALVO</h1></div>
+    <div class="plate" style="width:100%;max-width:300px;margin:0 auto;aspect-ratio:auto;grid-template-rows:auto auto auto auto"><div class="top" style="font-size:18px">A SALVO</div><div class="qrbox">${SalvoQR.svgFor(personUrl(pr.code))}</div><div class="cap">${pr.data.firstName.toUpperCase()} ${pr.data.lastName[0] ? pr.data.lastName[0].toUpperCase() + '.' : ''} · PERFIL DE EMERGENCIA<br>ESCANEAR SI ESTÁ INCONSCIENTE</div><div class="serial"><span>${pr.code}</span><span>${pr.data.bloodType || ''}</span></div><div class="band"></div></div>
+    <p class="lead">Imprimila del tamaño de una tarjeta o pegala en el casco. Quien la escanee ve solo tu nombre e inicial y puede avisar a tus contactos; el personal médico acreditado ve el perfil completo.</p>
+    <div class="actions"><button class="btn primary" data-action="person-preview">${ICON.eye}<span class="txt">Ver cómo la ve otra persona</span></button></div>
+    <p class="legalnote">En esta demo el perfil vive en este teléfono, así que la tarjeta solo se resuelve escaneándola desde este mismo dispositivo. En producción el código se resuelve en el servidor.</p>
+  </div>`; };
+
+  // Lo que ve quien escanea una tarjeta personal (?p=CODE)
+  V.person = () => {
+    const pr = S.person; const lvl = S.role;
+    if (!pr) return `<div class="s"><div class="appbar"><button class="back" data-action="home">${ICON.back}</button><h1>Tarjeta SALVO</h1></div>
+      <div class="warnbox"><div><b>No pudimos resolver esta tarjeta</b>El código <span style="font-family:var(--font-mono)">${S.personCode || ''}</span> no está en este teléfono (DEMO). En producción se consulta al servidor.</div></div>
+      <div class="actions"><button class="btn danger" data-action="go" data-to="call">${ICON.phone}<span class="txt">Llamar a emergencias</span></button></div></div>`;
+    const d = pr.data; const full = lvl === 'responder';
+    return `<div class="s">
+      <div class="appbar"><button class="back" data-action="home">${ICON.back}</button><div class="spacer"></div><span class="pill lock">${ICON.lock} ${D.accessLevels[lvl].label}</span></div>
+      <div class="idband"><div class="ck">${ICON.check}</div><div><b>PERSONA CON PERFIL SALVO</b><span>Tiene contactos de emergencia registrados</span></div></div>
+      <div class="card driver-row"><div class="avatar">${d.firstName[0]}${d.lastName[0] || ''}</div><div class="grow"><b>${d.firstName} ${d.lastName[0] ? d.lastName[0] + '.' : ''}</b><span>${d.birthYear ? (new Date().getFullYear() - +d.birthYear) + ' años aprox.' : 'Perfil de emergencia'} · ${pr.code}</span></div></div>
+      <div class="locked"><div class="medgrid ${full ? '' : 'blur'}">
+        <div class="med"><span class="k">Tipo de sangre</span><span class="v">${d.bloodType || '—'}</span></div><div class="med"><span class="k">Alergias</span><span class="v">${d.allergies || 'Ninguna'}</span></div>
+        <div class="med wide"><span class="k">Condiciones</span><span class="v" style="font-size:15px">${d.conditions || '—'}</span></div><div class="med wide"><span class="k">Medicación</span><span class="v" style="font-size:15px">${d.medications || '—'}</span></div>
+        ${d.notes ? `<div class="med wide"><span class="k">Notas</span><span class="v" style="font-size:14px">${d.notes}</span></div>` : ''}
+      </div>${full ? '' : `<div class="lockmsg"><div><span class="pill lock">${ICON.lock} Solo personal de emergencia</span></div></div>`}</div>
+      <div class="actions">
+        <button class="btn primary" data-action="person-notify">${ICON.user}<span class="txt">Avisar a sus contactos<span class="sub">${pr.contacts.length} contacto(s) · reciben lugar y hora, no tus datos</span></span></button>
+        <button class="btn danger left" data-action="go" data-to="call">${ICON.phone}<span class="txt">Llamar a emergencias</span></button>
+        ${full ? '' : `<button class="btn ghost left" data-action="person-elevate">${ICON.med}<span class="txt">Soy personal de emergencia<span class="sub">Acceso con credencial · queda auditado</span></span></button>`}
+      </div>
+      ${full ? `<div class="card tight" style="font-size:12px;color:var(--muted)">Acceso registrado en la auditoría del titular (hora + credencial). Consentimiento: ${pr.consentAt.slice(0, 10)}.</div>` : ''}
+    </div>`;
+  };
 
   // ------------------------------------------------------------ render teléfono
   function render() {
@@ -512,10 +635,36 @@
       'driver-report'() { toast('Formulario corto de 2 pasos (tipo + nota de voz)'); },
       toast() { toast(b.dataset.msg); },
     };
-    if (A[a]) A[a]();
+    const P = {
+      'profile-start'() { S.pform = newForm(null); go('profilecreate'); },
+      'profile-edit'() { S.pform = newForm(S.profile); S.pform.phone = S.profile.phone; S.pform.step = 2; go('profilecreate'); },
+      'profile-back'() { const f = S.pform; if (f.step > (f.editing ? 2 : 1)) { f.step--; render(); } else back(); },
+      'profile-otp-send'() { const f = S.pform; if (f.phone.replace(/\D/g, '').length < 7) return toast('Escribí un número válido'); f.demoOtp = String(1000 + Math.floor(Math.random() * 9000)); api('POST', '/v1/profiles/otp', { phone: maskPhone(f.phone) }, { handler: () => ({ _log: 'OTP enviado por SMS/WhatsApp · válido 5 min · DEMO: ' + f.demoOtp }) }).then(() => { f.otpSent = true; render(); }).catch(() => toast('Sin red: no se pudo enviar el código')); },
+      'profile-otp-resend'() { const f = S.pform; f.demoOtp = String(1000 + Math.floor(Math.random() * 9000)); f.otp = ''; log('info', 'OTP reenviado · DEMO: ' + f.demoOtp); render(); },
+      'profile-otp-verify'() { const f = S.pform; if (f.otp.trim() !== f.demoOtp) { haptic(60); return toast('Código incorrecto. Revisá el mensaje.'); } log('ok', 'teléfono verificado'); f.otpOk = true; f.step = 2; render(); },
+      'profile-next'() { const f = S.pform; if (f.step === 2 && !f.data.firstName.trim()) return toast('El nombre es necesario para identificarte'); f.step++; render(); },
+      'profile-contact-add'() { const f = S.pform, c = f.newContact; if (!c.name.trim() || c.phone.replace(/\D/g, '').length < 7) return toast('Nombre y celular del contacto'); f.contacts.push({ name: c.name.trim(), relation: c.relation.trim(), phone: c.phone, channel: c.channel, verified: false }); f.newContact = { name: '', relation: '', phone: '', channel: 'whatsapp' }; log('info', `contacto agregado · se le envía confirmación por ${c.channel} (DEMO)`); render(); },
+      'profile-contact-remove'() { S.pform.contacts.splice(+b.dataset.i, 1); render(); },
+      'profile-consent'() { S.pform.consent = !S.pform.consent; render(); },
+      'profile-save'() {
+        const f = S.pform; const prev = S.profile;
+        const pr = { code: prev ? prev.code : personCode(), phone: f.phone, data: f.data, contacts: f.contacts.map(c => Object.assign({}, c, { verified: true })), consentAt: prev ? prev.consentAt : now().toISOString(), createdAt: prev ? prev.createdAt : now().toISOString(), updatedAt: now().toISOString(), audit: prev ? prev.audit : [] };
+        api(prev ? 'PUT' : 'POST', prev ? '/v1/me/emergency-profile' : '/v1/profiles', { fields: Object.keys(f.data).filter(k => f.data[k]).length, contacts: pr.contacts.length, consent: true }, { handler: () => ({ _log: 'campos médicos cifrados (KMS) · consentimiento fechado · código ' + pr.code }) })
+          .then(() => { S.profile = pr; saveProfile(pr); S.pform = null; haptic([30, 40, 30]); S.prev = ['home']; go('profile', { replace: true }); toast(prev ? 'Perfil actualizado' : 'Perfil creado. Ya tenés tu tarjeta SALVO.', true); })
+          .catch(() => { S.profile = pr; saveProfile(pr); S.pform = null; S.prev = ['home']; go('profile', { replace: true }); toast('Sin red: guardado en el teléfono, se sincroniza después'); });
+      },
+      'profile-delete'() { if (!confirm('¿Borrar tu perfil de emergencia? Se elimina de este teléfono y del servidor.')) return; api('DELETE', '/v1/me/emergency-profile', null, { handler: () => ({ _log: 'perfil y contactos eliminados · auditoría conservada 90 días' }) }).finally(() => { S.profile = null; try { localStorage.removeItem(PKEY); } catch (e) {} render(); toast('Perfil borrado'); }); },
+      'person-preview'() { S.person = S.profile; S.personCode = S.profile.code; log('info', `simulando escaneo de la tarjeta ${S.profile.code} por otra persona`); go('person'); },
+      'person-notify'() { api('POST', `/v1/persons/${S.person.code}/notify`, { contacts: S.person.contacts.length, incident: S.incident ? S.incident.id : null }, { handler: () => ({ _log: 'avisos enviados con lugar y hora' }) }).then(() => { toast('Contactos avisados', true); if (S.profile && S.profile.code === S.person.code) { S.profile.audit.push({ at: hhmm(now()), who: 'Aviso a contactos (persona que escaneó)' }); saveProfile(S.profile); } }); },
+      'person-elevate'() { api('POST', '/v1/access/elevate', { level: 'responder', credential: 'SEDES-•••-1042', subject: S.person.code }, { handler: () => ({ _log: 'credencial válida · 30 min · auditado' }) }).then(() => { S.role = 'responder'; syncRoleUI(); if (S.profile && S.profile.code === S.person.code) { S.profile.audit.push({ at: hhmm(now()), who: 'SEDES-•••-1042 vio el perfil médico' }); saveProfile(S.profile); } render(); toast('Acceso concedido y registrado', true); }); },
+    };
+    if (A[a]) A[a](); else if (P[a]) P[a]();
   });
+  document.addEventListener('change', e => { const t = e.target; if (t.tagName === 'SELECT' && t.dataset.bind && S.pform) { const path = t.dataset.bind.split('.'); let o = S.pform; while (path.length > 1) o = o[path.shift()]; o[path[0]] = t.value; } });
   document.addEventListener('input', e => {
-    const t = e.target; if (!t.dataset.action) return;
+    const t = e.target;
+    if (t.dataset.bind && S.pform) { const path = t.dataset.bind.split('.'); let o = S.pform; while (path.length > 1) o = o[path.shift()]; o[path[0]] = t.value; return; }
+    if (!t.dataset.action) return;
     if (t.dataset.action === 'witness-text') S.witness.text = t.value;
     if (t.dataset.action === 'witness-contact') S.witness.contact = t.value;
   });
@@ -594,6 +743,7 @@
     if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !location.hostname.includes('claude')) {
       navigator.serviceWorker.register('sw.js').then(() => log('ok', 'service worker registrado: la ficha del último vehículo queda disponible sin red')).catch(() => {});
     }
+    if (q.get('p')) { S.personCode = q.get('p'); S.person = S.profile && S.profile.code === q.get('p') ? S.profile : null; log('ok', `deep link ?p=${q.get('p')} — tarjeta personal SALVO`); go('person', { replace: true }); return; }
     if (q.get('qr')) { render(); log('ok', `deep link ?qr=${q.get('qr')} — así llega un teléfono real que escaneó la placa`); startScan(q.get('qr')); return; }
     render(); timer(() => { if (S.screen === 'splash') go('home', { replace: true }); }, 1400);
   }

@@ -34,7 +34,9 @@ cd prototype && python3 -m http.server 8000
 Sin build ni dependencias de red: Three.js y el generador de QR están vendorizados. Simula los
 9 puntos pedidos —escanear, identificar vehículo, conductor, información autorizada por nivel,
 reportar accidente, ubicación, Incident ID, notificar contacto, estado— más testigo, modo
-emergencia, red lenta/sin conexión, app del conductor y panel del operador. Una consola lateral
+emergencia, red lenta/sin conexión, **creación de perfil de emergencia** (OTP, datos médicos,
+contactos, consentimiento, tarjeta con QR personal, editar/borrar; persiste en el teléfono),
+app del conductor y panel del operador. Una consola lateral
 muestra el pipeline del backend simulado en cada acción.
 
 **Real en la demo**: el QR de la placa (escanealo con tu teléfono), la geolocalización del
