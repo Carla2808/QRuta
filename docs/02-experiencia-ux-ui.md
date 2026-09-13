@@ -94,8 +94,7 @@ camino del accidente empieza en la 4/5.
 | 8 | **Línea de tiempo que avanza sola** | Reportado → Verificando → … con hora y nota de quién hizo qué. | Transparencia: "alguien está atendiendo". |
 | 9 | **"AYUDA SOLICITADA" + qué se envió** | Banda verde y lista de datos enviados con precisión en metros. | Cierra el bucle de ansiedad: ya no hay que explicar nada por teléfono. |
 | 10 | **La placa en el micro 3D** | Al tocar una ubicación, el QR en el modelo se ilumina en verde. | Explica a operadores/instaladores dónde va la placa y por qué. |
-| 11 | **Consola del pipeline (solo demo)** | Cada toque muestra `POST /v1/qr/scan → 200 · QR v3 válido · token 15 min`. | Para el equipo técnico y para pitches: el sistema es real, no una maqueta. |
-| 12 | **QR real en la demo** | Escanear la placa de la demo con un teléfono abre la demo directo en "identificado". | Prueba el flujo cero-fricción de verdad. |
+| 11 | **QR real en la demo** | Escanear la placa de la demo con un teléfono abre la demo directo en "identificado". | Prueba el flujo cero-fricción de verdad. |
 
 ## 2.6 PWA / web de emergencia
 

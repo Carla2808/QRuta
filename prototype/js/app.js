@@ -41,8 +41,9 @@
     qr: '<svg viewBox="0 0 24 24" class="ico" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 14h3v3h-3zM20 14v0M20 20h-3M17 20v1"/></svg>',
   };
 
-  // ------------------------------------------------------------ consola
+  // ------------------------------------------------------------ registro (consola del navegador)
   function log(kind, msg) {
+    try { console[kind === 'err' ? 'error' : kind === 'warn' ? 'warn' : 'log']('[SALVO] ' + msg.replace(/<[^>]+>/g, '')); } catch (e) {}
     const c = $('#console'); if (!c) return;
     const row = document.createElement('div'); row.className = 'log ' + kind;
     row.innerHTML = `<span class="t">${hhmmss(now())}</span><span class="m">${msg}</span>`;
@@ -676,7 +677,7 @@
     const r = e.target.closest('[data-role]'); if (r) { S.role = r.dataset.role; syncRoleUI(); log('info', `nivel de acceso de la demo → <b>${D.accessLevels[S.role].label}</b>`); render(); }
     const n = e.target.closest('[data-net]'); if (n) { S.net = n.dataset.net; syncNetUI(); log('warn', `red simulada → ${NET[S.net].label}`); }
     const v = e.target.closest('[data-view]'); if (v) { setView(v.dataset.view); }
-    if (e.target.closest('#reset')) { clearTimers(); Object.assign(S, { screen: 'home', prev: [], role: 'public', net: 'fast', incident: null, geo: null, form: null, witness: null, shift: null, vehicle: null }); syncRoleUI(); syncNetUI(); $('#console').innerHTML = ''; log('info', 'demo reiniciada'); setView('phone'); }
+    if (e.target.closest('#reset')) { clearTimers(); Object.assign(S, { screen: 'home', prev: [], role: 'public', net: 'fast', incident: null, geo: null, form: null, witness: null, shift: null, vehicle: null }); syncRoleUI(); syncNetUI(); log('info', 'demo reiniciada'); setView('phone'); }
   });
   function setView(v) {
     S.view = v; document.querySelectorAll('[data-view]').forEach(x => x.setAttribute('aria-selected', x.dataset.view === v));

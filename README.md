@@ -36,8 +36,8 @@ Sin build ni dependencias de red: Three.js y el generador de QR están vendoriza
 reportar accidente, ubicación, Incident ID, notificar contacto, estado— más testigo, modo
 emergencia, red lenta/sin conexión, **creación de perfil de emergencia** (OTP, datos médicos,
 contactos, consentimiento, tarjeta con QR personal, editar/borrar; persiste en el teléfono),
-app del conductor y panel del operador. Una consola lateral
-muestra el pipeline del backend simulado en cada acción.
+app del conductor y panel del operador. Las llamadas al backend
+simulado se registran en la consola del navegador (F12) con el prefijo `[SALVO]`.
 
 **Real en la demo**: el QR de la placa (escanealo con tu teléfono), la geolocalización del
 navegador, copiar/compartir y la vibración. **Simulado y marcado como DEMO**: backend, SMS,
